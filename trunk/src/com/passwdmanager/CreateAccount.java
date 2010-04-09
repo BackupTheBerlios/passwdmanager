@@ -98,7 +98,16 @@ public class CreateAccount extends Activity {
     	if(string.contains(" "))
     		return false;
     	
-    	return !string.contains("[\n\t\r\b\f\'\"\\ \\[\\]{}]");
+    	boolean res = true;
+    	int max = string.length();
+    	for(int i = 0; i < max ; i++){
+    		String piece = string.charAt(i) + "";
+    		if(piece.matches("[^A-Za-z0-9_\\-\\.@]")){
+    			res = false;
+    			break;
+    		}
+    	}
+    	return res;
     }
     
 //    @Override
