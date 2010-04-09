@@ -54,7 +54,7 @@ public class PasswdManager extends Activity {
 			
 			if((username.equals("")) || (pwd.equals(""))){
 				Toast.makeText(PasswdManager.this, 
-						getResources().getString(R.string.error), 
+						getResources().getString(R.string.error_wrongdata), 
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
@@ -62,7 +62,7 @@ public class PasswdManager extends Activity {
 			User user = FileManager.getInstance().readUserData(getBaseContext(), username);
 			if(user == null){
 				Toast.makeText(PasswdManager.this, 
-						getResources().getString(R.string.error), 
+						getResources().getString(R.string.login_error_user), 
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
@@ -78,7 +78,7 @@ public class PasswdManager extends Activity {
 				finish();
 			}else
 				Toast.makeText(PasswdManager.this, 
-						getResources().getString(R.string.error), 
+						getResources().getString(R.string.login_error_pwd), 
 						Toast.LENGTH_SHORT).show();
 		}
 	};
