@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PasswdManager</string>
+    
+    <string name="main_add">Añadir contraseña</string>
+    <string name="main_search">Buscar...</string>
+    <string name="main_import">Importar contraseñas</string>
+    <string name="main_showall">Mostrar contraseñas</string>
+    <string name="main_menu_remove">Eliminar cuenta</string>
+    <string name="main_no_passwords">No se encontraron contraseñas</string>
+    <string name="main_error_removing">El usuario no se pudo eliminar</string>
+    
+    <string name="login_username">Usuario: </string>
+    <string name="login_password">Contraseña: </string>
+    <string name="login_button_ok">Login</string>
+    <string name="login_menu_new_account">Crear cuenta</string>
+    
+    <string name="register_re_password">Repetir contraseña: </string>
+    <string name="register_button_ok">Crear</string>
+    <string name="register_error_passwords">Comprobar que las contraseñas coinciden</string>
+    <string name="register_error_userexist">Nombre de usuario existente</string>
+    
+    <string name="add_title">Añadir contraseña</string>
+    <string name="add_button">Añadir</string>
+    <string name="add_site">Sitio: </string>
+    <string name="add_user">Usuario: </string>
+    <string name="add_password">Contraseña: </string>
+    <string name="add_error_siteexist">Este sitio ya existe</string>
+    
+    <string name="list_export">Exportar contraseñas</string>
+    <string name="list_send">Enviar</string>
+    <string name="list_delete">Borrar</string>
+    
+    <string name="dialog_pbar">Cargando...</string>
+    <string name="dialog_delete">¿Está seguro?</string>
+    <string name="dialog_search">Buscar</string>
+    <string name="dialog_show">Ficha</string>
+    
+    <string name="ok">Ok</string>
+    <string name="error">Error</string>
+    
+    <string name="error_wrongdata">Datos incorrectos</string>
+</resources>

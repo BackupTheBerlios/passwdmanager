@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:orientation="vertical"
+	android:gravity="center"
+	android:background="@drawable/background">
+<ScrollView
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" >
+	
+<LinearLayout 
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dip">
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="20dip"
+    android:gravity="center_vertical"
+    android:background="@drawable/background_medium_min">
+    
+<TextView
+	android:text="@string/add_site"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+	android:textColor="#ffffff">
+    </TextView>
+    
+<TextView
+	android:id="@+id/info_site"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="20dip"
+    android:layout_gravity="center_horizontal"
+	android:textColor="#DDDDDD">
+    </TextView>
+
+<TextView
+	android:text="@string/add_user"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dip"
+	android:textColor="#ffffff">
+    </TextView>
+    
+<TextView
+	android:id="@+id/info_user"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="20dip"
+    android:layout_gravity="center_horizontal"
+	android:textColor="#DDDDDD">
+    </TextView>
+    
+<TextView
+	android:text="@string/add_password"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dip"
+	android:textColor="#ffffff">
+    </TextView>
+    
+<TextView
+	android:id="@+id/info_password"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="20dip"
+    android:layout_gravity="center_horizontal"
+	android:textColor="#DDDDDD">
+    </TextView>
+    
+</LinearLayout>
+</LinearLayout>
+</ScrollView>
+</LinearLayout>
