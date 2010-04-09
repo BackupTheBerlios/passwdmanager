@@ -208,7 +208,7 @@ public class MainMenu extends Activity{
     	    		final String username = ((EditText)textEntryView.findViewById(R.id.add_edit_user)).getText().toString();
     	    		final String password = ((EditText)textEntryView.findViewById(R.id.add_edit_password)).getText().toString();
     	    		
-    	    		if(!Validation.validate(username) || !Validation.validate(site) || !Validation.validate(password)){
+    	    		if(!Validation.validate(username, Validation.PATTERN) || !Validation.validate(site, Validation.PATTERN_SITE) || !Validation.validate(password, Validation.PATTERN)){
     					Toast.makeText(getBaseContext(), 
     							getResources().getString(R.string.error_wrongdata), 
     							Toast.LENGTH_SHORT).show();

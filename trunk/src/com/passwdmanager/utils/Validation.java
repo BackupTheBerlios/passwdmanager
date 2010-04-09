@@ -22,20 +22,22 @@ package com.passwdmanager.utils;
 
 
 public class Validation{
+	public static final String PATTERN= "[^A-Za-z0-9_\\-\\.@]";
+	public static final String PATTERN_SITE= "[^A-Za-z0-9_\\-\\.@ ]";
 	
-	public static boolean validate(String string){
+	public static boolean validate(String string, String pattern){
 
 		if((string == null) || string.equals(""))
 			return false;
 
-		if(string.contains(" "))
-			return false;
+//		if(string.contains(" "))
+//			return false;
 
 		boolean res = true;
 		int max = string.length();
 		for(int i = 0; i < max ; i++){
 			String piece = string.charAt(i) + "";
-			if(piece.matches("[^A-Za-z0-9_\\-\\.@]")){
+			if(piece.matches(pattern)){
 				res = false;
 				break;
 			}

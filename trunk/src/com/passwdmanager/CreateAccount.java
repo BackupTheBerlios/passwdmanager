@@ -48,7 +48,7 @@ public class CreateAccount extends Activity {
 			pwd = pwd.trim();
 			pwd_repeat = pwd_repeat.trim();
 			
-			if(!Validation.validate(username) || !Validation.validate(pwd) || !Validation.validate(pwd_repeat)){
+			if(!Validation.validate(username, Validation.PATTERN) || !Validation.validate(pwd, Validation.PATTERN) || !Validation.validate(pwd_repeat, Validation.PATTERN)){
 				Toast.makeText(getBaseContext(), 
 						getResources().getString(R.string.error_wrongdata), 
 						Toast.LENGTH_SHORT).show();
