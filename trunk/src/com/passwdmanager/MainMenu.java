@@ -25,6 +25,7 @@ import java.util.Collections;
 
 import com.passwdmanager.files.FileManager;
 import com.passwdmanager.security.SecurityManager;
+import com.passwdmanager.utils.Validation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -207,7 +208,7 @@ public class MainMenu extends Activity{
     	    		final String username = ((EditText)textEntryView.findViewById(R.id.add_edit_user)).getText().toString();
     	    		final String password = ((EditText)textEntryView.findViewById(R.id.add_edit_password)).getText().toString();
     	    		
-    				if(site.equals("") || username.equals("") || password.equals("")){
+    	    		if(!Validation.validate(username) || !Validation.validate(site) || !Validation.validate(password)){
     					Toast.makeText(getBaseContext(), 
     							getResources().getString(R.string.error_wrongdata), 
     							Toast.LENGTH_SHORT).show();

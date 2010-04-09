@@ -22,6 +22,7 @@ package com.passwdmanager;
 
 import com.passwdmanager.files.FileManager;
 import com.passwdmanager.security.SecurityManager;
+import com.passwdmanager.utils.Validation;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -47,9 +48,7 @@ public class CreateAccount extends Activity {
 			pwd = pwd.trim();
 			pwd_repeat = pwd_repeat.trim();
 			
-			// validation
-			
-			if(!validate(username) || !validate(pwd) || !validate(pwd_repeat)){
+			if(!Validation.validate(username) || !Validation.validate(pwd) || !Validation.validate(pwd_repeat)){
 				Toast.makeText(getBaseContext(), 
 						getResources().getString(R.string.error_wrongdata), 
 						Toast.LENGTH_SHORT).show();
@@ -57,27 +56,27 @@ public class CreateAccount extends Activity {
 			}
 			
 			
-//			if(!pwd.equals(pwd_repeat)){
-//				Toast.makeText(getBaseContext(), 
-//						getResources().getString(R.string.register_error_passwords), 
-//						Toast.LENGTH_SHORT).show();
-//				return;
-//			}
-//			
-//			String encripted_pwd = SecurityManager.encodePassword(pwd);
-//			
-//			User user = new User();
-//			user.setUsername(username);
-//			user.setPassword(encripted_pwd);
-//			
-//			if(FileManager.getInstance().createUserData(getBaseContext(), user))
-//				Toast.makeText(getBaseContext(), 
-//						"Ok", 
-//						Toast.LENGTH_SHORT).show();
-//			else
-//				Toast.makeText(getBaseContext(), 
-//						getResources().getString(R.string.register_error_userexist), 
-//						Toast.LENGTH_SHORT).show();
+			if(!pwd.equals(pwd_repeat)){
+				Toast.makeText(getBaseContext(), 
+						getResources().getString(R.string.register_error_passwords), 
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
+			String encripted_pwd = SecurityManager.encodePassword(pwd);
+			
+			User user = new User();
+			user.setUsername(username);
+			user.setPassword(encripted_pwd);
+			
+			if(FileManager.getInstance().createUserData(getBaseContext(), user))
+				Toast.makeText(getBaseContext(), 
+						"Ok", 
+						Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(getBaseContext(), 
+						getResources().getString(R.string.register_error_userexist), 
+						Toast.LENGTH_SHORT).show();
 		}
 	};
 	
@@ -88,26 +87,6 @@ public class CreateAccount extends Activity {
         
         Button bt_create = (Button)findViewById(R.id.register_button_ok);
 		bt_create.setOnClickListener(cl);
-    }
-    
-    private boolean validate(String string){
-    	
-    	if((string == null) || string.equals(""))
-    		return false;
-    	
-    	if(string.contains(" "))
-    		return false;
-    	
-    	boolean res = true;
-    	int max = string.length();
-    	for(int i = 0; i < max ; i++){
-    		String piece = string.charAt(i) + "";
-    		if(piece.matches("[^A-Za-z0-9_\\-\\.@]")){
-    			res = false;
-    			break;
-    		}
-    	}
-    	return res;
     }
     
 //    @Override
