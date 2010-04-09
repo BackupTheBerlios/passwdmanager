@@ -205,7 +205,6 @@ public class PasswdList extends ListActivity{
     		
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
-    		.setTitle(getResources().getString(R.string.dialog_show))
     		.setView(textEntryView)
     		.setOnCancelListener(new OnCancelListener() {
 				
