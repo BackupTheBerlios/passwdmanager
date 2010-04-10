@@ -24,22 +24,33 @@ import com.passwdmanager.files.FileManager;
 import com.passwdmanager.security.SecurityManager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class PasswdManager extends Activity {
 	
 	private static final int MENU_NEW_ACCOUNT = Menu.FIRST + 1;
+	private static final int MENU_ABOUT = Menu.FIRST + 2;
+
+	private static final int DIALOG_ABOUT = 0;
 	
 	private static final String KEY_USERNAME = "username";
 
@@ -100,6 +111,8 @@ public class PasswdManager extends Activity {
     	
     	menu.add(0, MENU_NEW_ACCOUNT, 0, R.string.login_menu_new_account)
     	.setIcon(R.drawable.icon_user);
+    	menu.add(0, MENU_ABOUT, 0, R.string.login_menu_about)
+    	.setIcon(R.drawable.about);
     	
         super.onCreateOptionsMenu(menu);        
         return true;
@@ -111,9 +124,38 @@ public class PasswdManager extends Activity {
     			Intent i = new Intent(this, CreateAccount.class);
     			startActivity(i);
     			break;
+    			
+    		case MENU_ABOUT:
+    			showDialog(DIALOG_ABOUT);
+    			break;
     	}
         return super.onOptionsItemSelected(item);
     }
+    
+	@Override
+    protected Dialog onCreateDialog(int id) {       
+    	
+    	switch (id) {
+    	case DIALOG_ABOUT:
+    		LayoutInflater factory = LayoutInflater.from(this);
+    		final View textEntryView = factory.inflate(R.layout.about, null);
+    		
+    		TextView tv = (TextView)textEntryView.findViewById(R.id.about);
+    		try {
+				tv.setText(getResources().getString(R.string.app_name) + " v" + 
+						getPackageManager().getPackageInfo(getPackageName(), 0).versionName + "\n" +
+						getResources().getString(R.string.about));
+			} catch (Exception e) {}
+    		
+    		return new AlertDialog.Builder(this)	      
+    		.setCancelable(true)
+    		.setView(textEntryView)
+    		.setIcon(R.drawable.about)
+    		.setTitle(R.string.login_menu_about)
+    		.create();
+    	}
+    	return null;
+	}
     
     private void loadConfig(){
     	

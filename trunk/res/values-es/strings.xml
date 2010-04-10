@@ -16,6 +16,7 @@
     <string name="login_menu_new_account">Crear cuenta</string>
     <string name="login_error_user">Usuario desconocido</string>
     <string name="login_error_pwd">Contraseña incorrecta</string>
+    <string name="login_menu_about">Acerca de...</string>
     
     <string name="register_re_password">Repetir contraseña: </string>
     <string name="register_button_ok">Crear</string>
@@ -42,4 +43,14 @@
     <string name="error">Error</string>
     
     <string name="error_wrongdata">Datos incorrectos</string>
+    
+    <string name="about">
+    http://passwdmanager.berlios.de\n
+    Copyright (C) Raúl Román\n
+    \n
+    Este software se encuentra bajo licencia GPL v3.0. \n
+    \n
+    Autor:\n
+    \tRaúl Román [rroman@libresoft.es]
+    </string>
 </resources>
