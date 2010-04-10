@@ -169,6 +169,7 @@ public class MainMenu extends Activity{
     	case DIALOG_DELETE:
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
+    		.setIcon(R.drawable.icon)
     		.setTitle(getResources().getString(R.string.list_delete))
     		.setMessage(getResources().getString(R.string.dialog_delete))
     		.setOnCancelListener(new OnCancelListener() {
@@ -199,6 +200,7 @@ public class MainMenu extends Activity{
     		
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
+    		.setIcon(R.drawable.icon)
     		.setTitle(getResources().getString(R.string.add_title))
     		.setView(textEntryView)
     		.setPositiveButton(getResources().getString(R.string.add_button), new DialogInterface.OnClickListener() {
@@ -257,6 +259,7 @@ public class MainMenu extends Activity{
     		
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
+    		.setIcon(R.drawable.icon)
     		.setTitle(getResources().getString(R.string.dialog_search))
     		.setView(textEntryView2)
     		.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {

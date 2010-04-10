@@ -177,6 +177,7 @@ public class ExternalList extends ListActivity{
     	case DIALOG_DELETE:
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
+    		.setIcon(R.drawable.icon)
     		.setTitle(getResources().getString(R.string.list_delete))
     		.setMessage(getResources().getString(R.string.dialog_delete))
     		.setOnCancelListener(new OnCancelListener() {
@@ -199,6 +200,7 @@ public class ExternalList extends ListActivity{
     	case DIALOG_IMPORT:
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
+    		.setIcon(R.drawable.icon)
     		.setTitle(getResources().getString(R.string.main_import))
     		.setMessage(getResources().getString(R.string.dialog_delete))
     		.setOnCancelListener(new OnCancelListener() {

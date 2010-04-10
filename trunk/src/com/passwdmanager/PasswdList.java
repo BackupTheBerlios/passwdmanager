@@ -169,6 +169,7 @@ public class PasswdList extends ListActivity{
     	case DIALOG_DELETE:
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
+    		.setIcon(R.drawable.icon)
     		.setTitle(getResources().getString(R.string.list_delete))
     		.setMessage(getResources().getString(R.string.dialog_delete))
     		.setOnCancelListener(new OnCancelListener() {
@@ -218,6 +219,7 @@ public class PasswdList extends ListActivity{
     	case DIALOG_EXPORT:
     		return new AlertDialog.Builder(this)
     		.setTitle(R.string.list_export)
+    		.setIcon(R.drawable.icon)
     		.setCancelable(true)
     		.setSingleChoiceItems(R.array.formats, -1,
     				new DialogInterface.OnClickListener() {
