@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:orientation="vertical"
+	android:gravity="center"
+	android:background="@drawable/background">
+<ScrollView
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" >
+	
+<LinearLayout
+	android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dip">
+    
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="20dip"
+    android:background="@drawable/background_banner">
+    
+<TextView
+	android:id="@+id/main_username"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:textStyle="bold"
+	android:textSize="18dip"
+	android:textColor="#ffffff">
+	</TextView>
+
+</LinearLayout>
+	 
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:padding="20dip"
+    android:background="@drawable/background_medium"
+    >
+
+<Button 
+	android:id="@+id/main_bt_add" 
+	android:text="@string/main_add" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:background="@drawable/button_large">
+	</Button>
+	
+<Button 
+	android:id="@+id/main_bt_import" 
+	android:text="@string/main_import" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:background="@drawable/button_large">
+	</Button>
+	
+<Button 
+	android:id="@+id/main_bt_showall" 
+	android:text="@string/main_showall" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:background="@drawable/button_large">
+	</Button>
+	
+<Button 
+	android:id="@+id/main_bt_search" 
+	android:text="@string/main_search" 
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content"
+	android:background="@drawable/button_large">
+	</Button>
+	
+</LinearLayout>
+</LinearLayout>
+</ScrollView>
+</LinearLayout>

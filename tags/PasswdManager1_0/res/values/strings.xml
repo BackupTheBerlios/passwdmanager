@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PasswdManager</string>
+    
+    <string name="main_add">Add password</string>
+    <string name="main_search">Search...</string>
+    <string name="main_import">Import passwords</string>
+    <string name="main_showall">Show all passwords</string>
+    <string name="main_menu_remove">Remove account</string>
+    <string name="main_no_passwords">No passwords found</string>
+    <string name="main_error_removing">User can\'t be removed</string>
+    
+    <string name="login_username">User: </string>
+    <string name="login_password">Password: </string>
+    <string name="login_button_ok">Login</string>
+    <string name="login_menu_new_account">New account</string>
+    <string name="login_error_user">Unknown user</string>
+    <string name="login_error_pwd">Wrong password</string>
+    <string name="login_menu_about">About...</string>
+    
+    <string name="register_re_password">Repeat password: </string>
+    <string name="register_button_ok">Create</string>
+    <string name="register_error_passwords">Check password repetition</string>
+    <string name="register_error_userexist">This user already exists</string>
+    
+    <string name="add_title">Add password</string>
+    <string name="add_button">Add</string>
+    <string name="add_site">Site: </string>
+    <string name="add_user">User: </string>
+    <string name="add_password">Password: </string>
+    <string name="add_error_siteexist">This site already exist</string>
+    
+    <string name="list_export">Export passwords</string>
+    <string name="list_send">Send</string>
+    <string name="list_delete">Delete</string>
+    
+    <string name="dialog_pbar">Loading...</string>
+    <string name="dialog_delete">Are you sure?</string>
+    <string name="dialog_search">Search</string>
+    <string name="dialog_show">Card</string>
+    
+    <string name="ok">Ok</string>
+    <string name="error">Error</string>
+    
+    <string name="error_wrongdata">Wrong data input</string>
+    <string name="select">Choose:</string>
+    
+    <string name="about">
+    http://passwdmanager.berlios.de\n
+    Copyright (C) Raúl Román\n
+    \n
+    This software is under GPL v3.0 license.\n
+    \n
+    Author:\n
+    \tRaúl Román [rroman@libresoft.es]
+    </string>
+</resources>
