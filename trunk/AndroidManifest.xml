@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.passwdmanager"
-      android:versionCode="1"
-      android:versionName="1.0">
+      android:versionCode="3"
+      android:versionName="1.0.2">
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".PasswdManager"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:configChanges="keyboard|keyboardHidden|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
-		<activity android:name=".CreateAccount"></activity>
-		<activity android:name=".MainMenu"></activity>
-		<activity android:name=".PasswdList"></activity>
-		<activity android:name=".ExternalList"></activity>
+		<activity android:name=".CreateAccount"
+                  android:configChanges="keyboard|keyboardHidden|orientation"></activity>
+		<activity android:name=".MainMenu"
+                  android:configChanges="keyboard|keyboardHidden|orientation"></activity>
+		<activity android:name=".PasswdList"
+                  android:configChanges="keyboard|keyboardHidden|orientation"></activity>
+		<activity android:name=".ExternalList"
+                  android:configChanges="keyboard|keyboardHidden|orientation"></activity>
     </application>
     <uses-sdk android:minSdkVersion="2" />
     <uses-sdk android:targetSdkVersion= "2"/>

@@ -17,6 +17,7 @@
     <string name="login_error_user">Unknown user</string>
     <string name="login_error_pwd">Wrong password</string>
     <string name="login_menu_about">About...</string>
+    <string name="login_menu_about_web">Go to website!</string>
     
     <string name="register_re_password">Repeat password: </string>
     <string name="register_button_ok">Create</string>

@@ -29,10 +29,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources.NotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -152,6 +150,15 @@ public class PasswdManager extends Activity {
     		.setView(textEntryView)
     		.setIcon(R.drawable.about)
     		.setTitle(R.string.login_menu_about)
+    		.setPositiveButton(R.string.login_menu_about_web, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse("http://passwdmanager.berlios.de/"));
+					startActivity(i);
+				}
+			})
     		.create();
     	}
     	return null;

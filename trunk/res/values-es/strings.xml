@@ -17,6 +17,7 @@
     <string name="login_error_user">Usuario desconocido</string>
     <string name="login_error_pwd">Contraseña incorrecta</string>
     <string name="login_menu_about">Acerca de...</string>
+    <string name="login_menu_about_web">¡Ir al sitio web!</string>
     
     <string name="register_re_password">Repetir contraseña: </string>
     <string name="register_button_ok">Crear</string>
