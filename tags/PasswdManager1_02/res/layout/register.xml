@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:orientation="vertical"
+	android:gravity="center"
+	android:background="@drawable/background">
+<ScrollView
+	android:layout_width="fill_parent" 
+	android:layout_height="wrap_content" >
+	
+<LinearLayout 
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent" 
+	android:padding="10dip"
+	android:orientation="vertical"
+	android:gravity="center_vertical">
+	
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="20dip"
+    android:gravity="center_vertical"
+    android:background="@drawable/background_medium">
+    
+<TextView 
+	android:text="@string/login_username" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:textColor="#ffffff">
+	</TextView>
+	
+<EditText 
+	android:layout_width="200dip" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/register_edit_username"
+	android:layout_gravity="center"
+	android:maxLines="1">
+	</EditText>
+	
+<TextView 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:text="@string/login_password"
+	android:paddingTop="10dip"
+	android:textColor="#ffffff">
+	</TextView>
+	
+<EditText 
+	android:layout_width="200dip" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/register_edit_password"
+	android:layout_gravity="center"
+	android:inputType="textPassword"
+	android:maxLines="1">
+	</EditText>
+	
+<TextView 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content" 
+	android:text="@string/register_re_password"
+	android:paddingTop="10dip"
+	android:textColor="#ffffff">
+	</TextView>
+	
+<EditText 
+	android:layout_width="200dip" 
+	android:layout_height="wrap_content" 
+	android:id="@+id/register_edit_re_password"
+	android:layout_gravity="center"
+	android:inputType="textPassword"
+	android:maxLines="1">
+	</EditText>
+</LinearLayout>
+
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="10dip"
+    android:background="@drawable/background_banner_bottom">
+    
+<Button 
+	android:id="@+id/register_button_ok" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"
+	android:text="@string/register_button_ok"
+	android:background="@drawable/button_small" >
+	</Button>
+</LinearLayout>
+</LinearLayout>
+</ScrollView>
+</LinearLayout>
