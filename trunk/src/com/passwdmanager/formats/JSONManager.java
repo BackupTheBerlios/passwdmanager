@@ -45,7 +45,11 @@ public class JSONManager{
 			data += "\n\t\t{";
 			data += "\t\t\t\"sitename\": \"" + pr.getSite() + "\", \n";
 			data += "\t\t\t\"name\": \"" + pr.getName() + "\", \n";
-			data += "\t\t\t\"password\": \"" + pr.getPassword() + "\"\n";
+			data += "\t\t\t\"password\": \"" + pr.getPassword();
+			if(pr.getNote() != null)
+				data += "\", \n\t\t\t\"note\": \"" + pr.getNote() + "\"\n";
+			else
+				data += "\"\n";
 			data += "\t\t}";
 		}
 		
@@ -73,6 +77,8 @@ public class JSONManager{
 					pr.setSite(site.getString("sitename"));
 					pr.setName(site.getString("name"));
 					pr.setPassword(site.getString("password"));
+					if(site.has("note"))
+						pr.setNote("note");
 					passwords.add(pr);
 				}
 			}

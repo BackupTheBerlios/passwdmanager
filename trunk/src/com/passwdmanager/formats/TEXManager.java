@@ -30,9 +30,9 @@ public class TEXManager{
 	private static final String LINE_DELIMITER = "\\\\ \\hline\n";
 	private static final String BEGIN_CENTER = "\\begin{center}\n";
 	private static final String END_CENTER = "\\end{center}\n";
-	private static final String BEGIN_TABULAR = "\\begin{tabular}{|c|c|c|}\\hline\n";
+	private static final String BEGIN_TABULAR = "\\begin{tabular}{|c|c|c|c|}\\hline\n";
 	private static final String END_TABULAR = "\\end{tabular}\n";
-	private static final String HEADER = "\\textbf{Site} & \\textbf{Usename} & \\textbf{Password} \\\\ \\hline\n";
+	private static final String HEADER = "\\textbf{Site} & \\textbf{Usename} & \\textbf{Password} & \\textbf{Note} \\\\ \\hline\n";
 	
 	public static String makeFile(String username, ArrayList<PasswdResource> passwords){
 		String data = "";
@@ -43,7 +43,10 @@ public class TEXManager{
 		int max = passwords.size();
 		for(int i = 0; i < max; i++){
 			PasswdResource pr = passwords.get(i);
-			data += pr.getSite() + FIELD_DELIMITER + pr.getName() + FIELD_DELIMITER + pr.getPassword() + LINE_DELIMITER;
+			data += pr.getSite() + FIELD_DELIMITER + pr.getName() + FIELD_DELIMITER + pr.getPassword(); 
+			if(pr.getNote() != null)
+				data += FIELD_DELIMITER + pr.getNote();
+			data += LINE_DELIMITER;
 		}
 		
 		data += END_TABULAR;
@@ -70,6 +73,8 @@ public class TEXManager{
 			pr.setSite(parts[0]);
 			pr.setName(parts[1]);
 			pr.setPassword(parts[2]);
+			if(parts.length == 4)
+				pr.setNote(parts[3]);
 			passwords.add(pr);
 		}
 		

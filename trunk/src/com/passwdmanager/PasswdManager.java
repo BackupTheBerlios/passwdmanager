@@ -103,6 +103,12 @@ public class PasswdManager extends Activity {
     }
     
     @Override
+    protected void onDestroy (){
+    	PasswdManagerDB.getInstance(getBaseContext()).clearAll();
+    	super.onDestroy();
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	
     	menu.add(0, MENU_NEW_ACCOUNT, 0, R.string.login_menu_new_account)

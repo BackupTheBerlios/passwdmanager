@@ -37,6 +37,8 @@ public class XMLManager{
 	private static final String CLOSE_NAME = "</name>\n";
 	private static final String PWD = "\t\t\t<password>";
 	private static final String CLOSE_PWD = "</password>\n";
+	private static final String NOTE = "\t\t\t<note>";
+	private static final String CLOSE_NOTE = "</note>\n";
 	
 	public static String makeFile(String username, ArrayList<PasswdResource> passwords){
 		String data = "";
@@ -51,6 +53,8 @@ public class XMLManager{
 			data += SITE_NAME + pr.getSite() + CLOSE_SITE_NAME;
 			data += NAME + pr.getName() + CLOSE_NAME;
 			data += PWD + pr.getPassword() + CLOSE_PWD;
+			if(pr.getNote() != null)
+				data += NOTE + pr.getNote() + CLOSE_NOTE;
 			data += CLOSE_SITE;
 		}
 		
@@ -79,6 +83,9 @@ public class XMLManager{
 					blocks[i].indexOf(CLOSE_NAME)));
 			pr.setPassword(blocks[i].substring(blocks[i].indexOf(PWD) + PWD.length(), 
 					blocks[i].indexOf(CLOSE_PWD)));
+			if((blocks[i].indexOf(NOTE) < 0) || (blocks[i].indexOf(CLOSE_NOTE) < 0))
+				pr.setNote(blocks[i].substring(blocks[i].indexOf(NOTE) + NOTE.length(), 
+						blocks[i].indexOf(CLOSE_NOTE)));
 			passwords.add(pr);
 		}
 		

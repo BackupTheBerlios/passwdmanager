@@ -108,6 +108,12 @@ public class MainMenu extends Activity{
         tv_user.setText(user.getUsername());
     }
     
+    @Override
+    protected void onDestroy (){
+    	PasswdManagerDB.getInstance(getBaseContext()).clearAll();
+    	super.onDestroy();
+    }
+    
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	

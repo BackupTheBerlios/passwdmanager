@@ -106,13 +106,15 @@ public class PasswdList extends ListActivity{
 		if (passwords == null || passwords.isEmpty()){
 			user = (User)getIntent().getSerializableExtra("USER");
 			
-			String username=null, sitename=null;
+			String username=null, sitename=null, note=null;
 			if(getIntent().hasExtra("SITENAME"))
 				sitename = getIntent().getStringExtra("SITENAME");
 			if(getIntent().hasExtra("USERNAME"))
 				username = getIntent().getStringExtra("USERNAME");
+			if(getIntent().hasExtra("NOTE"))
+				note = getIntent().getStringExtra("NOTE");
 			
-			passwords = PasswdManagerDB.getInstance(getBaseContext()).getPasswordsList(user, sitename, username);
+			passwords = PasswdManagerDB.getInstance(getBaseContext()).getPasswordsList(user, sitename, username, note);
 		}
 		mAdapter = new PwdAdapter(getBaseContext());
 		setListAdapter(mAdapter);

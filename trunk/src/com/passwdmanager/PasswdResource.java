@@ -31,6 +31,7 @@ public class PasswdResource implements Serializable{
 	private String site = "";
 	private String name = "";
 	private String password = "";
+	private String note = null;
 	
 	public void setSite(String site){
 		this.site = site;
@@ -54,6 +55,14 @@ public class PasswdResource implements Serializable{
 	
 	public String getPassword(){
 		return password;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public String getNote() {
+		return note;
 	}
 	
 }

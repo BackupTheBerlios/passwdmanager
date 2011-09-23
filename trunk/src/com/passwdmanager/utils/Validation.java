@@ -24,6 +24,7 @@ package com.passwdmanager.utils;
 public class Validation{
 	public static final String PATTERN= "[^A-Za-z0-9_\\-\\.@]";
 	public static final String PATTERN_SITE= "[^A-Za-z0-9_\\-\\.@ ]";
+	public static final String PATTERN_NOTE= "[^A-Za-z0-9_\\-\\.,\\(\\)¿\\?¡!:@ ]";
 	
 	public static boolean validate(String string, String pattern){
 

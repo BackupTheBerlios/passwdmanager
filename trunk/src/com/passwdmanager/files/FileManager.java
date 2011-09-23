@@ -53,7 +53,7 @@ public class FileManager{
 	public static final int CSV = 3;
 	
 	private static final String[] FORMATS = {".xml", ".json", ".tex", ".csv"};
-	private static final String SD_DIRECTORY = "/sdcard/PasswdManager/";
+	private static final String SD_DIRECTORY = Environment.getExternalStorageDirectory() + "/PasswdManager/";
 	private static final String LIST_NAME = "_passwords";
 	private static final String USER_DATA = "_data.json";
 	

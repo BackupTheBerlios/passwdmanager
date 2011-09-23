@@ -33,14 +33,18 @@ public class CSVManager{
 		String data = "";
 		data += STRING_DELIMITER + "Site" + STRING_DELIMITER + FIELD_DELIMITER;
 		data += STRING_DELIMITER + "Username" + STRING_DELIMITER + FIELD_DELIMITER;
-		data += STRING_DELIMITER + "Password" + STRING_DELIMITER + "\n";
+		data += STRING_DELIMITER + "Password" + STRING_DELIMITER + FIELD_DELIMITER;
+		data += STRING_DELIMITER + "Note" + STRING_DELIMITER + "\n";
 		
 		int max = passwords.size();
 		for(int i = 0; i < max; i++){
 			PasswdResource pr = passwords.get(i);
 			data += STRING_DELIMITER + pr.getSite() + STRING_DELIMITER + FIELD_DELIMITER;
 			data += STRING_DELIMITER + pr.getName() + STRING_DELIMITER + FIELD_DELIMITER;
-			data += STRING_DELIMITER + pr.getPassword() + STRING_DELIMITER + "\n";
+			data += STRING_DELIMITER + pr.getPassword() + STRING_DELIMITER;
+			if(pr.getNote() != null)
+				data += FIELD_DELIMITER + STRING_DELIMITER + pr.getNote() + STRING_DELIMITER;
+			data += "\n";
 		}
 		
 		return data;
@@ -63,6 +67,8 @@ public class CSVManager{
 			pr.setSite(parts[0].split(STRING_DELIMITER)[1]);
 			pr.setName(parts[1].split(STRING_DELIMITER)[1]);
 			pr.setPassword(parts[2].split(STRING_DELIMITER)[1]);
+			if(parts.length == 4)
+				pr.setNote(parts[3].split(STRING_DELIMITER)[1]);
 			passwords.add(pr);
 		}
 		

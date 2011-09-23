@@ -23,10 +23,12 @@ public class PasswdManagerDB{
 
 	private static final String PASSWDS_TABLE = "_passwds";
 	private static final String SITE_COL = "site";
+	private static final String NOTE_COL = "site";
 	private static final String CREATE_TABLE = "create table ";
 	private static final String CREATE_TABLE_PASSWDS1 =	" (" + SITE_COL + " text primary key, " 
 	+ NAME_COL + " text not null, " 
-	+ PASSWD_COL + " text not null);";
+	+ PASSWD_COL + " text not null, " 
+	+ NOTE_COL + " text);";
 
 	private SQLiteDatabase db;
 
@@ -115,6 +117,7 @@ public class PasswdManagerDB{
 		values.put(SITE_COL, passwdResource.getSite());
 		values.put(NAME_COL, passwdResource.getName());
 		values.put(PASSWD_COL, passwdResource.getPassword());
+		values.put(NOTE_COL, passwdResource.getNote());
 		return (db.insert(user.getUsername() + PASSWDS_TABLE, null, values) >= 0);
 	}
 	
@@ -125,6 +128,7 @@ public class PasswdManagerDB{
 		ContentValues values = new ContentValues();
 		values.put(NAME_COL, passwdResource.getName());
 		values.put(PASSWD_COL, passwdResource.getPassword());
+		values.put(NOTE_COL, passwdResource.getNote());
 		return (db.update(user.getUsername() + PASSWDS_TABLE, values, SITE_COL + "=\"" + passwdResource.getSite() + "\"", null) > 0);
 	}
 
@@ -142,7 +146,7 @@ public class PasswdManagerDB{
 		return (db.delete(user.getUsername() + PASSWDS_TABLE, null, null) > 0);
 	}
 
-	public ArrayList<PasswdResource> getPasswordsList(User user, String site_pattern, String username_pattern){
+	public ArrayList<PasswdResource> getPasswordsList(User user, String site_pattern, String username_pattern, String note_pattern){
 		ArrayList<PasswdResource> passwd_list = new ArrayList<PasswdResource>();
 		
 		String where = null;
@@ -155,9 +159,16 @@ public class PasswdManagerDB{
 				where += " AND ";
 			where += NAME_COL + " like '%" + username_pattern + "%'";
 		}
+		if((note_pattern != null) && (!note_pattern.equals(""))){
+			if(where == null)
+				where = "";
+			else
+				where += " AND ";
+			where += NOTE_COL + " like '%" + username_pattern + "%'";
+		}
 		
 		try{
-			Cursor c = db.query(user.getUsername() + PASSWDS_TABLE, new String[] { SITE_COL, NAME_COL, PASSWD_COL }, 
+			Cursor c = db.query(user.getUsername() + PASSWDS_TABLE, new String[] { SITE_COL, NAME_COL, PASSWD_COL, NOTE_COL }, 
 					where, null, null, null, "lower(" + SITE_COL + ") ASC");
 
 			int numRows = c.getCount();
@@ -167,6 +178,7 @@ public class PasswdManagerDB{
 				pd.setSite(c.getString(0));
 				pd.setName(c.getString(1));
 				pd.setPassword(c.getString(2));
+				pd.setNote(c.getString(3));
 				passwd_list.add(pd);
 				c.moveToNext();
 			}
@@ -178,94 +190,10 @@ public class PasswdManagerDB{
 		return passwd_list;
 	}
 
-
-
-
-
-
-
-
-	//	
-	//	
-	//	public boolean insertFav(String theater_name, String url) {
-	//		ContentValues values = new ContentValues();
-	//		values.put(NAME_COL, theater_name);
-	//		values.put(PASSWD_COL, url);
-	//		return (db.insert(FAVS_TABLE, null, values) > 0);
-	//	}
-	//
-	//	public boolean deleteFav(String theater_name) {
-	//		return (db.delete(FAVS_TABLE, NAME_COL + "=\"" + theater_name + "\"", null) > 0);
-	//	}
-	//
-	//	public boolean deleteAllFavs() {
-	//		return (db.delete(FAVS_TABLE, null, null) > 0);
-	//	}
-	//
-	//	public PasswdResource getPasswdResource(String theater_name){
-	//		PasswdResource passwd = new PasswdResource();
-	//
-	//		try{
-	//			Cursor c = db.query(FAVS_TABLE, new String[] { NAME_COL, PASSWD_COL }, 
-	//					NAME_COL + "=\"" + theater_name + "\"", null, null, null, null);
-	//			c.moveToFirst();
-	//			passwd.setSite(c.getString(0));
-	//			passwd.setName(c.getString(1));
-	//			passwd.setPassword(c.getString(2));
-	//			c.close();
-	//		}catch(Exception e){
-	//			Log.e("PasswdManagerDB", "", e);
-	//			return null;
-	//		}
-	//
-	//		return passwd;
-	//	}
-	//
-	//	public ArrayList<Theater> getFavList(){
-	//		ArrayList<Theater> theater_list = new ArrayList<Theater>();
-	//
-	//		try{
-	//			Cursor c = db.query(FAVS_TABLE, new String[] { NAME_COL, PASSWD_COL }, 
-	//					null, null, null, null, NAME_COL + " ASC");
-	//
-	//			int numRows = c.getCount();
-	//			c.moveToFirst();
-	//			for(int i = 0; i<numRows; i++){
-	//				Theater theater = new Theater();
-	//				theater.setName(c.getString(0));
-	//				theater.setUrl(c.getString(1));
-	//				theater_list.add(theater);
-	//				c.moveToNext();
-	//			}
-	//			c.close();
-	//		}catch(Exception e){
-	//			Log.e("PasswdManagerDB", "", e);
-	//		}
-	//
-	//		return theater_list;
-	//	}
-	//
-	//	public boolean isEmpty(){
-	//		try{
-	//			Cursor c = db.query(FAVS_TABLE, new String[] { NAME_COL, PASSWD_COL }, 
-	//					null, null, null, null, null);
-	//
-	//			int numRows = c.getCount();
-	//			c.close();
-	//			
-	//			if(numRows > 0)
-	//				return false;
-	//		}catch(Exception e){
-	//			Log.e("PasswdManagerDB", "", e);
-	//		}
-	//
-	//		return true;
-	//	}
-	//	
-	//	public void clearAll(){
-	//		if(db != null)
-	//			db.close();
-	//		passwdDB = null;
-	//	}
+	public void clearAll(){
+		if(db != null)
+			db.close();
+		passwdDB = null;
+	}
 
 }
