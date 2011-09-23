@@ -37,6 +37,7 @@
 	android:layout_height="wrap_content" 
 	android:id="@+id/add_edit_site"
 	android:layout_gravity="center"
+	android:inputType="textPersonName"
 	android:maxLines="1">
 	</EditText>
 	
@@ -53,6 +54,7 @@
 	android:layout_height="wrap_content" 
 	android:id="@+id/add_edit_user"
 	android:layout_gravity="center"
+	android:inputType="textPersonName"
 	android:maxLines="1">
 	</EditText>
 	
@@ -72,6 +74,11 @@
 	android:inputType="textPassword"
 	android:maxLines="1">
 	</EditText>
+<CheckBox
+	android:id="@+id/add_cb_password"
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:text="@string/add_show_password" />
 </LinearLayout>
 </LinearLayout>
 </ScrollView>

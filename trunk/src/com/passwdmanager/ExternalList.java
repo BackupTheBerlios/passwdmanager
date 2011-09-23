@@ -22,9 +22,9 @@ package com.passwdmanager;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 
 import com.passwdmanager.files.FileManager;
+import com.passwdmanager.files.PasswdManagerDB;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,7 +40,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,11 +62,11 @@ public class ExternalList extends ListActivity{
 	private static final int DIALOG_IMPORT = 1;
 	private static final int DIALOG_DELETE = 2;
 	
-	private static ArrayList<File> files = null;
-	private static User user;
+	private ArrayList<File> files = null;
+	private User user;
 	
 	private FileListAdapter mAdapter = null;
-	private static int fileClicked = -1;
+	private int fileClicked = -1;
 	
 	private Handler mHandler = new Handler(){
 		@Override
@@ -107,15 +106,6 @@ public class ExternalList extends ListActivity{
 		}else{
 			setFileAdapter();
 		}
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-		if ((files != null) && (keyCode == KeyEvent.KEYCODE_BACK))
-			files = null;
-
-		return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
@@ -209,7 +199,7 @@ public class ExternalList extends ListActivity{
 					removeDialog(DIALOG_IMPORT);
 				}
 			})
-    		.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+    		.setNeutralButton(getResources().getString(R.string.dialog_import_override), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					removeDialog(DIALOG_IMPORT);
@@ -217,7 +207,23 @@ public class ExternalList extends ListActivity{
 					
 					new Thread(){
 						public void run(){
-							if(importPasswdList())
+							if(importPasswdList(1))
+								mHandler.sendEmptyMessage(0);
+							else
+								mHandler.sendEmptyMessage(-1);
+						}
+					}.start();
+				}
+			})
+    		.setPositiveButton(getResources().getString(R.string.dialog_import_fill), new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(DIALOG_IMPORT);
+					showDialog(DIALOG_PBAR);
+					
+					new Thread(){
+						public void run(){
+							if(importPasswdList(0))
 								mHandler.sendEmptyMessage(0);
 							else
 								mHandler.sendEmptyMessage(-1);
@@ -235,46 +241,23 @@ public class ExternalList extends ListActivity{
 		setListAdapter(mAdapter);
 	}
 	
-	private boolean importPasswdList(){
+	private boolean importPasswdList(int type){
 		File file = files.get(fileClicked);
-		ArrayList<PasswdResource> pwd_list = new ArrayList<PasswdResource>();
 		
 		ArrayList<PasswdResource> pwd_imported = FileManager.getInstance().readExternalUserPasswords(file.getAbsolutePath());
 		if(pwd_imported == null)
 			return false;
 		
-		ArrayList<PasswdResource> pwd_saved = FileManager.getInstance().readUserPasswords(getBaseContext(), user.getUsername());
-		if((pwd_saved == null) || (pwd_saved.isEmpty())){
-			pwd_list = pwd_imported;
-		}else{
-			int max1 = pwd_imported.size();
-			int max2 = pwd_saved.size();
-			for(int i = 0; i < max1; i++){
-				PasswdResource pr1 = pwd_imported.get(i);
-				boolean add = true;
-				for(int j = 0; j < max2; j++){
-					PasswdResource pr2 = pwd_saved.get(j);
-					if(pr1.getSite().equals(pr2.getSite())){
-						add = false;
-						break;
-					}
-				}
-				if(add)
-					pwd_list.add(pr1);
-			}
-			pwd_list.addAll(pwd_saved);
+		for(PasswdResource pr : pwd_imported){
+			if(!PasswdManagerDB.getInstance(getBaseContext()).insertPasswd(user, pr) && (type == 1))
+				PasswdManagerDB.getInstance(getBaseContext()).updatePasswd(user, pr);
 		}
-		
-		PasswdResourceComparator comparator = new PasswdResourceComparator();
-		Collections.sort(pwd_list, comparator);
-		
-		FileManager.getInstance().createUserPasswords(getBaseContext(), user.getUsername(), pwd_list);
 		
 		return true;
 	}
 	
 	
-	private static class FileListAdapter extends BaseAdapter {
+	private class FileListAdapter extends BaseAdapter {
 
 		private Context mContext;
 

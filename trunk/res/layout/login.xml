@@ -38,7 +38,8 @@
 	android:layout_height="wrap_content" 
 	android:id="@+id/login_edit_username"
 	android:layout_gravity="center"
-	android:maxLines="1">
+	android:maxLines="1"
+	android:inputType="textPersonName">
 	</EditText>
 	
 <TextView 

@@ -20,8 +20,9 @@
 
 package com.passwdmanager;
 
-import com.passwdmanager.files.FileManager;
+import com.passwdmanager.files.PasswdManagerDB;
 import com.passwdmanager.security.SecurityManager;
+import com.passwdmanager.utils.Validation;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -61,23 +62,19 @@ public class PasswdManager extends Activity {
 			String username = et_username.getText().toString();
 			String pwd = ((EditText)findViewById(R.id.login_edit_password)).getText().toString();
 			
-			if((username.equals("")) || (pwd.equals(""))){
+			if(!Validation.validate(username, Validation.PATTERN) || !Validation.validate(pwd, Validation.PATTERN)){
 				Toast.makeText(PasswdManager.this, 
 						getResources().getString(R.string.error_wrongdata), 
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			
-			User user = FileManager.getInstance().readUserData(getBaseContext(), username);
-			if(user == null){
-				Toast.makeText(PasswdManager.this, 
-						getResources().getString(R.string.login_error_user), 
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
 			String encoded_pwd = SecurityManager.encodePassword(pwd);
 			
-			if(user.getPassword().equals(encoded_pwd)){
+			User user = new User();
+			user.setUsername(username);
+			user.setPassword(encoded_pwd);
+			
+			if(PasswdManagerDB.getInstance(getBaseContext()).checkUser(user)){
 				user.setPassword(pwd);
 				saveConfig();
 				
@@ -87,8 +84,9 @@ public class PasswdManager extends Activity {
 				finish();
 			}else
 				Toast.makeText(PasswdManager.this, 
-						getResources().getString(R.string.login_error_pwd), 
+						getResources().getString(R.string.login_error), 
 						Toast.LENGTH_SHORT).show();
+				
 		}
 	};
 	

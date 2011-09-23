@@ -37,6 +37,7 @@
 	android:layout_height="wrap_content" 
 	android:id="@+id/register_edit_username"
 	android:layout_gravity="center"
+	android:inputType="textPersonName"
 	android:maxLines="1">
 	</EditText>
 	

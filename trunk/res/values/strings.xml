@@ -9,13 +9,13 @@
     <string name="main_menu_remove">Remove account</string>
     <string name="main_no_passwords">No passwords found</string>
     <string name="main_error_removing">User can\'t be removed</string>
+    <string name="main_error_adding">Error: invalid data or existing site</string>
     
     <string name="login_username">User: </string>
     <string name="login_password">Password: </string>
     <string name="login_button_ok">Login</string>
     <string name="login_menu_new_account">New account</string>
-    <string name="login_error_user">Unknown user</string>
-    <string name="login_error_pwd">Wrong password</string>
+    <string name="login_error">Unknown user:passwd</string>
     <string name="login_menu_about">About...</string>
     <string name="login_menu_about_web">Go to website!</string>
     
@@ -29,16 +29,20 @@
     <string name="add_site">Site: </string>
     <string name="add_user">User: </string>
     <string name="add_password">Password: </string>
+    <string name="add_show_password">Show password</string>
     <string name="add_error_siteexist">This site already exist</string>
     
     <string name="list_export">Export passwords</string>
     <string name="list_send">Send</string>
     <string name="list_delete">Delete</string>
+    <string name="list_edit">Edit</string>
     
     <string name="dialog_pbar">Loading...</string>
     <string name="dialog_delete">Are you sure?</string>
     <string name="dialog_search">Search</string>
     <string name="dialog_show">Card</string>
+    <string name="dialog_import_fill">Fill</string>
+    <string name="dialog_import_override">Override existing</string>
     
     <string name="ok">Ok</string>
     <string name="error">Error</string>

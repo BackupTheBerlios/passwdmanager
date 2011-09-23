@@ -24,7 +24,9 @@ package com.passwdmanager;
 import java.util.ArrayList;
 
 import com.passwdmanager.files.FileManager;
+import com.passwdmanager.files.PasswdManagerDB;
 import com.passwdmanager.security.SecurityManager;
+import com.passwdmanager.utils.Validation;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -33,12 +35,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,31 +50,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.BaseAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 public class PasswdList extends ListActivity{
 	private static final int DIALOG_SHOW = 0;
 	private static final int DIALOG_DELETE = 1;
 	private static final int DIALOG_EXPORT = 2;
 	private static final int DIALOG_PBAR = 3;
+	private static final int DIALOG_EDIT = 4;
 	
 	private static final int MENU_DELETE = Menu.FIRST + 1;
-	private static final int MENU_EXPORT = Menu.FIRST + 2;
+	private static final int MENU_EDIT = Menu.FIRST + 2;
+	private static final int MENU_EXPORT = Menu.FIRST + 3;
 	
-	private static ArrayList<PasswdResource> passwords = null;
-	private static User user = null;
+	private ArrayList<PasswdResource> passwords = null;
+	private User user = null;
 	
 	private PwdAdapter mAdapter;
 	
-	private static int pwdClicked = -1;
+	private int pwdClicked = -1;
 	
 	private Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
 			removeDialog(DIALOG_PBAR);
+			pwdClicked = -1;
 			if(msg.what == 0)
 				Toast.makeText(getBaseContext(), 
 						getResources().getString(R.string.ok), 
@@ -94,20 +105,18 @@ public class PasswdList extends ListActivity{
 		getListView().setDivider(null);
 		
 		if (passwords == null || passwords.isEmpty()){
-			passwords = (ArrayList<PasswdResource>)getIntent().getSerializableExtra("LIST");
 			user = (User)getIntent().getSerializableExtra("USER");
+			
+			String username=null, sitename=null;
+			if(getIntent().hasExtra("SITENAME"))
+				sitename = getIntent().getStringExtra("SITENAME");
+			if(getIntent().hasExtra("USERNAME"))
+				username = getIntent().getStringExtra("USERNAME");
+			
+			passwords = PasswdManagerDB.getInstance(getBaseContext()).getPasswordsList(user, sitename, username);
 		}
 		mAdapter = new PwdAdapter(getBaseContext());
 		setListAdapter(mAdapter);
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-
-		if ((passwords != null) && (keyCode == KeyEvent.KEYCODE_BACK))
-			passwords.clear();
-
-		return super.onKeyDown(keyCode, event);
 	}
 	
 	@Override
@@ -121,17 +130,24 @@ public class PasswdList extends ListActivity{
 		super.onCreateContextMenu(menu, view, menuInfo);
 		
 		menu.add(0, MENU_DELETE, 0 , getResources().getString(R.string.list_delete));
+		menu.add(0, MENU_EDIT, 0 , getResources().getString(R.string.list_edit));
 	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item){
 		super.onContextItemSelected(item);
+
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+		pwdClicked = info.position;
+		
 		switch (item.getItemId()) {
 		case MENU_DELETE:
-			AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-					.getMenuInfo();
-			pwdClicked = info.position;
 			showDialog(DIALOG_DELETE);
+			break;
+
+		case MENU_EDIT:
+			showDialog(DIALOG_EDIT);
 			break;
 		}
 		return true;
@@ -182,8 +198,9 @@ public class PasswdList extends ListActivity{
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					removeDialog(DIALOG_DELETE);
-					FileManager.getInstance().removeNode(getBaseContext(), user.getUsername(), passwords.get(pwdClicked));
+					PasswdManagerDB.getInstance(getBaseContext()).deletePasswd(user, passwords.get(pwdClicked));
 					passwords.remove(pwdClicked);
+					pwdClicked = -1;
 					mAdapter.notifyDataSetChanged();
 				}
 			})
@@ -204,7 +221,7 @@ public class PasswdList extends ListActivity{
     		tv = (TextView)textEntryView.findViewById(R.id.info_password);
     		tv.setText(SecurityManager.decodeXOR(pr.getPassword(), user.getPassword()));
     		
-    		return new AlertDialog.Builder(this)	      
+    		Dialog d = new AlertDialog.Builder(this)	      
     		.setCancelable(true)
     		.setView(textEntryView)
     		.setOnCancelListener(new OnCancelListener() {
@@ -212,6 +229,74 @@ public class PasswdList extends ListActivity{
 				@Override
 				public void onCancel(DialogInterface dialog) {
 					removeDialog(DIALOG_SHOW);
+				}
+			})
+    		.create();
+    		d.setCanceledOnTouchOutside(true);
+    		return d;
+    		
+    	case DIALOG_EDIT:
+    		LayoutInflater factory1 = LayoutInflater.from(this);
+    		View textEntryView1 = factory1.inflate(R.layout.edit_pwd, null);
+    		
+    		final PasswdResource pr1 = passwords.get(pwdClicked);
+    		
+    		TextView tv1 = (TextView)textEntryView1.findViewById(R.id.add_tv_site);
+    		tv1.setText(pr1.getSite());
+    		
+    		final EditText  et_name = (EditText)textEntryView1.findViewById(R.id.add_edit_user);
+    		et_name.setText(pr1.getName());
+    		
+    		final EditText et_pwd = (EditText)textEntryView1.findViewById(R.id.add_edit_password);
+    		et_pwd.setText(SecurityManager.decodeXOR(pr1.getPassword(), user.getPassword()));
+    		
+    		((CheckBox)textEntryView1.findViewById(R.id.add_cb_password)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if(isChecked)
+						et_pwd.setTransformationMethod(null);
+					else
+						et_pwd.setTransformationMethod(new PasswordTransformationMethod());
+				}
+			});
+    		
+    		return new AlertDialog.Builder(this)	      
+    		.setCancelable(true)
+    		.setView(textEntryView1)
+    		.setOnCancelListener(new OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					removeDialog(DIALOG_SHOW);
+				}
+			})
+			.setPositiveButton(R.string.ok, new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					removeDialog(DIALOG_SHOW);
+					String username = et_name.getText().toString();
+					String password = et_pwd.getText().toString();
+    	    		
+    	    		if(!Validation.validate(username, Validation.PATTERN) || !Validation.validate(password, Validation.PATTERN)){
+    					Toast.makeText(getBaseContext(), 
+    							getResources().getString(R.string.error_wrongdata), 
+    							Toast.LENGTH_SHORT).show();
+    					return;
+    				}
+
+    				String encrypted_pwd = SecurityManager.encodeXOR(password, user.getPassword());
+    				pr1.setName(username);
+    				pr1.setPassword(encrypted_pwd);
+    				
+    				if(PasswdManagerDB.getInstance(getBaseContext()).updatePasswd(user, pr1))
+    					Toast.makeText(getBaseContext(), 
+    							getString(R.string.ok), 
+    							Toast.LENGTH_SHORT).show();
+    				else
+    					Toast.makeText(getBaseContext(), 
+    							getString(R.string.main_error_adding), 
+    							Toast.LENGTH_SHORT).show();
 				}
 			})
     		.create();
@@ -256,7 +341,7 @@ public class PasswdList extends ListActivity{
 	
 	
 	
-	private static class PwdAdapter extends BaseAdapter {
+	private class PwdAdapter extends BaseAdapter {
 
 		private Context mContext;
 

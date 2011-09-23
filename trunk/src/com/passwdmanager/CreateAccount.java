@@ -20,7 +20,7 @@
 
 package com.passwdmanager;
 
-import com.passwdmanager.files.FileManager;
+import com.passwdmanager.files.PasswdManagerDB;
 import com.passwdmanager.security.SecurityManager;
 import com.passwdmanager.utils.Validation;
 
@@ -48,17 +48,16 @@ public class CreateAccount extends Activity {
 			pwd = pwd.trim();
 			pwd_repeat = pwd_repeat.trim();
 			
-			if(!Validation.validate(username, Validation.PATTERN) || !Validation.validate(pwd, Validation.PATTERN) || !Validation.validate(pwd_repeat, Validation.PATTERN)){
+			if(!pwd.equals(pwd_repeat)){
 				Toast.makeText(getBaseContext(), 
-						getResources().getString(R.string.error_wrongdata), 
+						getResources().getString(R.string.register_error_passwords), 
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
 			
-			
-			if(!pwd.equals(pwd_repeat)){
+			if(!Validation.validate(username, Validation.PATTERN) || !Validation.validate(pwd, Validation.PATTERN)){
 				Toast.makeText(getBaseContext(), 
-						getResources().getString(R.string.register_error_passwords), 
+						getResources().getString(R.string.error_wrongdata), 
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
@@ -69,7 +68,7 @@ public class CreateAccount extends Activity {
 			user.setUsername(username);
 			user.setPassword(encripted_pwd);
 			
-			if(FileManager.getInstance().createUserData(getBaseContext(), user))
+			if(PasswdManagerDB.getInstance(getBaseContext()).createUser(user))
 				Toast.makeText(getBaseContext(), 
 						"Ok", 
 						Toast.LENGTH_SHORT).show();

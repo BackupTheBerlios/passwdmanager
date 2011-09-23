@@ -20,10 +20,7 @@
 
 package com.passwdmanager;
 
-import java.util.ArrayList;
-import java.util.Collections;
-
-import com.passwdmanager.files.FileManager;
+import com.passwdmanager.files.PasswdManagerDB;
 import com.passwdmanager.security.SecurityManager;
 import com.passwdmanager.utils.Validation;
 
@@ -35,17 +32,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 
 public class MainMenu extends Activity{
@@ -56,20 +55,7 @@ public class MainMenu extends Activity{
 	private static final int DIALOG_SEARCH = 2;
 	private static final int DIALOG_DELETE = 3;
 	
-	private ArrayList<PasswdResource> passwords;
-	
 	private User user;
-	
-	private Handler mHandler = new Handler(){
-		@Override
-		public void handleMessage(Message msg){
-			removeDialog(DIALOG_PBAR);
-			if(passwords == null)
-				Toast.makeText(getBaseContext(), 
-						getResources().getString(R.string.main_no_passwords), 
-						Toast.LENGTH_SHORT);
-		}
-	};
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,7 +97,6 @@ public class MainMenu extends Activity{
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(getBaseContext(), PasswdList.class);
-				i.putExtra("LIST", passwords);
 				i.putExtra("USER", user);
 				startActivity(i);
 			}
@@ -121,18 +106,6 @@ public class MainMenu extends Activity{
         
         user = (User)getIntent().getSerializableExtra("USER");
         tv_user.setText(user.getUsername());
-    }
-    
-    @Override
-    protected void onResume(){
-    	showDialog(DIALOG_PBAR);
-    	new Thread(){
-    		public void run(){
-    	    	passwords = FileManager.getInstance().readUserPasswords(getBaseContext(), user.getUsername());
-    	    	mHandler.sendEmptyMessage(0);
-    		}
-    	}.start();
-    	super.onResume();
     }
     
 	@Override
@@ -182,7 +155,7 @@ public class MainMenu extends Activity{
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					removeDialog(DIALOG_DELETE);
-					if(FileManager.getInstance().removeUser(getBaseContext(), user.getUsername())){
+					if(PasswdManagerDB.getInstance(getBaseContext()).deleteUser(user.getUsername())){
 	    				Intent i = new Intent(getBaseContext(), PasswdManager.class);
 	    				startActivity(i);
 	    				finish();
@@ -197,6 +170,18 @@ public class MainMenu extends Activity{
     	case DIALOG_ADD:
     		LayoutInflater factory = LayoutInflater.from(this);
     		final View textEntryView = factory.inflate(R.layout.add_pwd, null);
+    		final EditText et_pwd = (EditText)textEntryView.findViewById(R.id.add_edit_password);
+    		
+    		((CheckBox)textEntryView.findViewById(R.id.add_cb_password)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					if(isChecked)
+						et_pwd.setTransformationMethod(null);
+					else
+						et_pwd.setTransformationMethod(new PasswordTransformationMethod());
+				}
+			});
     		
     		return new AlertDialog.Builder(this)	      
     		.setCancelable(true)
@@ -216,38 +201,21 @@ public class MainMenu extends Activity{
     							Toast.LENGTH_SHORT).show();
     					return;
     				}
+
+    				String encrypted_pwd = SecurityManager.encodeXOR(password, user.getPassword());
+    				PasswdResource pr = new PasswdResource();
+    				pr.setSite(site);
+    				pr.setName(username);
+    				pr.setPassword(encrypted_pwd);
     				
-    				showDialog(DIALOG_PBAR);
-    				new Thread(){
-    					public void run(){
-    						if(passwords == null)
-    							passwords = new ArrayList<PasswdResource>();
-    						int max = passwords.size();
-    	    				for(int i = 0; i < max; i++){
-    	    					if(passwords.get(i).getSite().equals(site)){
-    	    						Toast.makeText(getBaseContext(), 
-    	        							getResources().getString(R.string.add_error_siteexist), 
-    	        							Toast.LENGTH_SHORT).show();
-    	    						mHandler.sendEmptyMessage(0);
-    	        					return;
-    	    					}
-    	    				}
-    	    				String encrypted_pwd = SecurityManager.encodeXOR(password, user.getPassword());
-    	    				PasswdResource pr = new PasswdResource();
-    	    				pr.setSite(site);
-    	    				pr.setName(username);
-    	    				pr.setPassword(encrypted_pwd);
-    	    				
-    	    				passwords.add(pr);
-    	    				
-    	    				// Sort nodes by site
-    	    				PasswdResourceComparator comparator = new PasswdResourceComparator();
-    	    				Collections.sort(passwords, comparator);
-    	    				
-    	    				FileManager.getInstance().createUserPasswords(getBaseContext(), user.getUsername(), passwords);
-    						mHandler.sendEmptyMessage(0);
-    					}
-    				}.start();
+    				if(PasswdManagerDB.getInstance(getBaseContext()).insertPasswd(user, pr))
+    					Toast.makeText(getBaseContext(), 
+    							getString(R.string.ok), 
+    							Toast.LENGTH_SHORT).show();
+    				else
+    					Toast.makeText(getBaseContext(), 
+    							getString(R.string.main_error_adding), 
+    							Toast.LENGTH_SHORT).show();
     				
     			}
     		})
@@ -265,38 +233,15 @@ public class MainMenu extends Activity{
     		.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
     			public void onClick(DialogInterface dialog, int whichButton) {
     				removeDialog(DIALOG_SEARCH);
-    				if(passwords == null)
-    					return;
     				
-    				final String site = ((EditText)textEntryView2.findViewById(R.id.search_edit_site)).getText().toString();
-    	    		final String username = ((EditText)textEntryView2.findViewById(R.id.search_edit_user)).getText().toString();
+    				String site = ((EditText)textEntryView2.findViewById(R.id.search_edit_site)).getText().toString();
+    	    		String username = ((EditText)textEntryView2.findViewById(R.id.search_edit_user)).getText().toString();
     	    		
-    	    		showDialog(DIALOG_PBAR);
-    	    		
-    	    		final ArrayList<PasswdResource> list = new ArrayList<PasswdResource>();
-    	    		final Handler handler = new Handler(){
-    	    			@Override
-    	    			public void handleMessage(Message msg){
-    	    				removeDialog(DIALOG_PBAR);
-    	    				Intent i = new Intent(getBaseContext(), PasswdList.class);
-    	    				i.putExtra("LIST", list);
-    	    				i.putExtra("USER", user);
-    	    				startActivity(i);
-    	    			}
-    	    		};
-    	    		
-    	    		new Thread(){
-    	    			public void run(){
-    	    				int max = passwords.size();
-    	    				for(int i = 0; i < max; i++){
-    	    					PasswdResource pr = passwords.get(i);
-    	    					if((site.equals("") || (pr.getSite().contains(site))) &&
-    	    							(username.equals("") || (pr.getName().contains(username))))
-    	    						list.add(pr);
-    	    				}
-    	    				handler.sendEmptyMessage(0);
-    	    			}
-    	    		}.start();
+    				Intent i = new Intent(getBaseContext(), PasswdList.class);
+    				i.putExtra("SITENAME", site);
+    				i.putExtra("USERNAME", username);
+    				i.putExtra("USER", user);
+    				startActivity(i);
     			}
     		})
     		.create();
