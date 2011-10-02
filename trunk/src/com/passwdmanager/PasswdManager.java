@@ -20,6 +20,7 @@
 
 package com.passwdmanager;
 
+import com.passwdmanager.files.FileManager;
 import com.passwdmanager.files.PasswdManagerDB;
 import com.passwdmanager.security.SecurityManager;
 import com.passwdmanager.utils.Validation;
@@ -52,6 +53,7 @@ public class PasswdManager extends Activity {
 	private static final int DIALOG_ABOUT = 0;
 	
 	private static final String KEY_USERNAME = "username";
+	private static final String KEY_MIGRATED = "migrated";
 
 	private EditText et_username;
 	
@@ -176,7 +178,18 @@ public class PasswdManager extends Activity {
 		
 		if (username != null)			
 			et_username.setText(username);	
-			
+		
+		boolean is_migrated = sharedPreferences.getBoolean(KEY_MIGRATED, false);
+		if(!is_migrated){
+			is_migrated = FileManager.getInstance().doMigration(getBaseContext());
+			Editor editor = sharedPreferences.edit();
+			editor.putBoolean(KEY_MIGRATED, is_migrated);
+			editor.commit();
+			if(is_migrated)
+				Toast.makeText(getBaseContext(), R.string.main_migration_ok, Toast.LENGTH_SHORT).show();
+			else
+				Toast.makeText(getBaseContext(), R.string.main_migration_error, Toast.LENGTH_LONG).show();
+		}
     }
     
     private void saveConfig (){

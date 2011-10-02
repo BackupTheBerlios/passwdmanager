@@ -179,6 +179,39 @@ public class FileManager{
 		return JSONManager.loadFile(data);
 	}
 	
+	public boolean doMigration(Context context){
+		boolean res = true;
+		String[] files = context.fileList();
+		String username = null;
+		User user = null;
+		ArrayList<PasswdResource> passwd_list = null;
+		boolean remove = true;
+		for(String file : files){
+			remove = true;
+			if(file.contains(USER_DATA)){
+				username = file.split(USER_DATA)[0];
+				user = readUserData(context, username);
+				if(!PasswdManagerDB.getInstance(context).createUser(user)){
+					res = false;
+					continue;
+				}
+				passwd_list = readUserPasswords(context, username);
+				for(PasswdResource pwd : passwd_list){
+					if(!PasswdManagerDB.getInstance(context).insertPasswd(user, pwd)){
+						res = false;
+						remove = false;
+						PasswdManagerDB.getInstance(context).deleteUser(username);
+						break;
+					}
+				}
+				if(remove){
+					removeUser(context, username);
+				}
+			}
+		}
+		return res;
+	}
+	
 	public boolean createExternalUserPasswords(String username, ArrayList<PasswdResource> passwords, int format){
 		if(!checkSD())
 			return false;
