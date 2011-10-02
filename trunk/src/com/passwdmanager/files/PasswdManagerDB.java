@@ -83,10 +83,13 @@ public class PasswdManagerDB{
 		try{
 			Cursor c = db.query(USERS_TABLE, new String[] { NAME_COL, PASSWD_COL }, 
 					NAME_COL + "=\"" + name + "\"", null, null, null, null);
-			c.moveToFirst();
-			User user = new User();
-			user.setUsername(c.getString(0));
-			user.setPassword(c.getString(1));
+			User user = null;
+			if(c.getCount() > 0){
+				user = new User();
+				c.moveToFirst();
+				user.setUsername(c.getString(0));
+				user.setPassword(c.getString(1));
+			}
 			c.close();
 
 			return user;
