@@ -23,7 +23,7 @@ public class PasswdManagerDB{
 
 	private static final String PASSWDS_TABLE = "_passwds";
 	private static final String SITE_COL = "site";
-	private static final String NOTE_COL = "site";
+	private static final String NOTE_COL = "note";
 	private static final String CREATE_TABLE = "create table ";
 	private static final String CREATE_TABLE_PASSWDS1 =	" (" + SITE_COL + " text primary key, " 
 	+ NAME_COL + " text not null, " 
