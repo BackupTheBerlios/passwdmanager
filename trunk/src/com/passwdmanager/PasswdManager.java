@@ -28,13 +28,17 @@ import com.passwdmanager.utils.Validation;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +60,7 @@ public class PasswdManager extends Activity {
 	private static final String KEY_MIGRATED = "migrated";
 
 	private EditText et_username;
+	private boolean is_migrated = false;
 	
 	private OnClickListener loginListener = new OnClickListener() {
 		
@@ -179,16 +184,9 @@ public class PasswdManager extends Activity {
 		if (username != null)			
 			et_username.setText(username);	
 		
-		boolean is_migrated = sharedPreferences.getBoolean(KEY_MIGRATED, false);
+		is_migrated = sharedPreferences.getBoolean(KEY_MIGRATED, false);
 		if(!is_migrated){
-			is_migrated = FileManager.getInstance().doMigration(getBaseContext());
-			Editor editor = sharedPreferences.edit();
-			editor.putBoolean(KEY_MIGRATED, is_migrated);
-			editor.commit();
-			if(is_migrated)
-				Toast.makeText(getBaseContext(), R.string.main_migration_ok, Toast.LENGTH_SHORT).show();
-			else
-				Toast.makeText(getBaseContext(), R.string.main_migration_error, Toast.LENGTH_LONG).show();
+			new AsyncMigrationRequest(getBaseContext()).execute();
 		}
     }
     
@@ -202,4 +200,41 @@ public class PasswdManager extends Activity {
 		
 		editor.commit();
     }
+    
+
+	
+	public class AsyncMigrationRequest extends AsyncTask<Void, Void, Void>{
+		protected Context mContext;
+		private ProgressDialog pd;
+
+		public AsyncMigrationRequest(Context mContext){
+			this.mContext = mContext;
+		}
+
+		protected void onPreExecute(){
+			pd = ProgressDialog.show(mContext,"", mContext.getString(R.string.main_migration), true, false);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			is_migrated = FileManager.getInstance().doMigration(getBaseContext());
+			return null;
+		}
+
+		protected void onPostExecute(Void unused) {
+			try{
+				pd.dismiss();
+				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(PasswdManager.this);
+				Editor editor = sharedPreferences.edit();
+				editor.putBoolean(KEY_MIGRATED, is_migrated);
+				editor.commit();
+				if(is_migrated)
+					Toast.makeText(getBaseContext(), R.string.main_migration_ok, Toast.LENGTH_SHORT).show();
+				else
+					Toast.makeText(getBaseContext(), R.string.main_migration_error, Toast.LENGTH_LONG).show();
+			}catch(Exception e){
+				Log.e("AsyncRequest", "", e);
+			}
+		}  
+	}
 }

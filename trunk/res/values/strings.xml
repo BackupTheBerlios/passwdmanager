@@ -10,6 +10,7 @@
     <string name="main_no_passwords">No passwords found</string>
     <string name="main_error_removing">User can\'t be removed</string>
     <string name="main_error_adding">Error: invalid data or existing site</string>
+    <string name="main_migration">Migrating to new system...</string>
     <string name="main_migration_ok">Migration completed</string>
     <string name="main_migration_error">Migration error</string>
     

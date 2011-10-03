@@ -10,6 +10,7 @@
     <string name="main_no_passwords">No se encontraron contraseñas</string>
     <string name="main_error_removing">El usuario no se pudo eliminar</string>
     <string name="main_error_adding">Error: datos inválidos o sitio ya registrado</string>
+    <string name="main_migration">Migrando al nuevo sistema...</string>
     <string name="main_migration_ok">Migración completada</string>
     <string name="main_migration_error">Error en la migración</string>
     
