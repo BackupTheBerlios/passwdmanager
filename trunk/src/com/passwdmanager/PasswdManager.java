@@ -186,7 +186,7 @@ public class PasswdManager extends Activity {
 		
 		is_migrated = sharedPreferences.getBoolean(KEY_MIGRATED, false);
 		if(!is_migrated){
-			new AsyncMigrationRequest(getBaseContext()).execute();
+			new AsyncMigrationRequest(this).execute();
 		}
     }
     
